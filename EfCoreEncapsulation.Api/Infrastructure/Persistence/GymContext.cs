@@ -2,14 +2,31 @@
 using EfCoreEncapsulation.Api.Enrollments;
 using EfCoreEncapsulation.Api.Members;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace EfCoreEncapsulation.Api.Infrastructure.Persistence
 {
     public class GymContext : DbContext
     {
-        public GymContext(DbContextOptions options) : base(options)
-        {
+        private readonly string _connectionString;
+        private readonly bool _enableLog;
+        private readonly bool _enableSensitiveLogging;
 
+        public GymContext(string connectionString, bool enableLog, bool enableSensitiveLogging)
+        {
+            _connectionString = connectionString;
+            _enableLog = enableLog;
+            _enableSensitiveLogging = enableSensitiveLogging;
+        }
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseSqlServer(_connectionString);
+            optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+            // Conditionally enable sensitive data logging
+            if (_enableSensitiveLogging)
+            {
+                optionsBuilder.EnableSensitiveDataLogging();
+            }
         }
         public DbSet<Member> Members { get; set; }
         public DbSet<Class> Classes { get; set; }
@@ -37,6 +54,13 @@ namespace EfCoreEncapsulation.Api.Infrastructure.Persistence
                 new Enrollment { MemberId = 1, ClassId = 1 },
                 new Enrollment { MemberId = 2, ClassId = 2 }
             );
+
+        }
+        ILoggerFactory? CreateLoggerFactory()
+        {
+            return LoggerFactory.Create(builder => builder
+                    .AddFilter((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information)
+                    .AddConsole());
         }
     }
 }

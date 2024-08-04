@@ -1,7 +1,14 @@
 using EfCoreEncapsulation.Api.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
+
+
+var environment = builder.Environment.EnvironmentName;
+builder.Configuration
+    .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+    .AddJsonFile($"appsettings.{environment}.json", optional: true, reloadOnChange: true);
 
 // Add services to the container.
 
@@ -9,10 +16,10 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<GymContext>(options =>
-{
-    options.UseSqlServer(builder.Configuration["ConnectionString"]);
-});
+var enableSensitiveDataLogging = builder.Configuration.GetValue<bool>("SensitiveDataLogging");
+
+
+builder.Services.AddScoped(_ => new GymContext(builder.Configuration["ConnectionString"], true, enableSensitiveDataLogging));
 
 var app = builder.Build();
 
