@@ -3,7 +3,25 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33829.357
 MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EfCoreEncapsulation.Api", "EfCoreEncapsulation.Api\EfCoreEncapsulation.Api.csproj", "{367B30AA-36FB-416D-95B8-C0FC5A0A5760}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solutions Items", "Solutions Items", "{57DA2438-43DD-4E9F-8331-A9F7BEADA0E4}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		EfCoreEncapsulation.Api\InitialCreate.sql = EfCoreEncapsulation.Api\InitialCreate.sql
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{367B30AA-36FB-416D-95B8-C0FC5A0A5760}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{367B30AA-36FB-416D-95B8-C0FC5A0A5760}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{367B30AA-36FB-416D-95B8-C0FC5A0A5760}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{367B30AA-36FB-416D-95B8-C0FC5A0A5760}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
