@@ -21,7 +21,7 @@ namespace EfCoreEncapsulation.Api.Controllers
         [HttpGet("id")]
         public IActionResult Get(int id)
         {
-            var result = _repository.GetMemberById(id);
+            var result = _repository.GetMemberByIdWithLoadingCollections(id);
 
             if (result is null)
             {
@@ -37,11 +37,21 @@ namespace EfCoreEncapsulation.Api.Controllers
                 {
                     ClassName = enrollment.Class.ClassName,
                     Instructor = enrollment.Class.Instructor
+                }).ToList(),
+                Payments = result.Payments.Select(p => new PaymentResponse()
+                {
+                    Amount = p.Amount,
+                    PaymentDate = p.PaymentDate
                 }).ToList()
             };
 
-            return Ok(response);
+            if (result.Payments.Any(p => p.PaymentDate.Month == DateTime.Now.Month
+                                        && p.PaymentDate.Year == DateTime.Now.Year))
+            {
+                response.IsUpToDate = true;
+            };
 
+            return Ok(response);
         }
     }
 }

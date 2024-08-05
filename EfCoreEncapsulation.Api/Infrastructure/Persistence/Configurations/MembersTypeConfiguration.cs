@@ -25,6 +25,9 @@ namespace EfCoreEncapsulation.Api.Infrastructure.Persistence.Configurations
                   .WithOne(e => e.Member);
 
             builder.Navigation(m => m.Enrollments).AutoInclude(); //This helps simplifying the query to members by including enrollments
+            //builder.Navigation(m => m.Payments).AutoInclude(); //This helps simplifying the query to members by including enrollments
+
         }
+
     }
 }
