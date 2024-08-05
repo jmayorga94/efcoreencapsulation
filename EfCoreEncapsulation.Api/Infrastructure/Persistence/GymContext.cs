@@ -1,6 +1,7 @@
 ﻿using EfCoreEncapsulation.Api.Classes;
 using EfCoreEncapsulation.Api.Enrollments;
 using EfCoreEncapsulation.Api.Members;
+using EfCoreEncapsulation.Api.Payments;
 using Microsoft.EntityFrameworkCore;
 
 namespace EfCoreEncapsulation.Api.Infrastructure.Persistence
@@ -56,6 +57,12 @@ namespace EfCoreEncapsulation.Api.Infrastructure.Persistence
                new Enrollment { MemberId = 1, ClassId = 3 },
                new Enrollment { MemberId = 3, ClassId = 3 }
               );
+
+            modelBuilder.Entity<Payment>().HasData(
+            new Payment { PaymentId = 1, MemberId = 1, Amount = 50.00m, PaymentDate = new DateTime(2023, 1, 15) },
+            new Payment { PaymentId = 2, MemberId = 1, Amount = 75.00m, PaymentDate = new DateTime(2023, 2, 15) },
+            new Payment { PaymentId = 3, MemberId = 2, Amount = 60.00m, PaymentDate = new DateTime(2023, 2, 20) }
+        );
 
         }
         ILoggerFactory? CreateLoggerFactory()
