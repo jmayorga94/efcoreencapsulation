@@ -11,6 +11,9 @@ namespace EfCoreEncapsulation.Api.Infrastructure.Persistence
         private readonly string _connectionString;
         private readonly bool _enableLog;
         private readonly bool _enableSensitiveLogging;
+        public DbSet<Member> Members { get; set; }
+        public DbSet<Class> Classes { get; set; }
+        public DbSet<Enrollment> Enrollments { get; set; }
 
         public GymContext(string connectionString, bool enableLog, bool enableSensitiveLogging)
         {
@@ -21,16 +24,15 @@ namespace EfCoreEncapsulation.Api.Infrastructure.Persistence
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(_connectionString);
-            optionsBuilder.UseLoggerFactory(CreateLoggerFactory());
+
+            if(_enableLog)
+                optionsBuilder.UseLoggerFactory(CreateLoggerFactory()); 
+
             // Conditionally enable sensitive data logging
             if (_enableSensitiveLogging)
-            {
-                optionsBuilder.EnableSensitiveDataLogging();
-            }
+               optionsBuilder.EnableSensitiveDataLogging();
+            
         }
-        public DbSet<Member> Members { get; set; }
-        public DbSet<Class> Classes { get; set; }
-        public DbSet<Enrollment> Enrollments { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

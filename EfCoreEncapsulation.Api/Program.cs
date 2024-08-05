@@ -1,4 +1,5 @@
 using EfCoreEncapsulation.Api.Infrastructure.Persistence;
+using EfCoreEncapsulation.Api.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
@@ -20,6 +21,7 @@ var enableSensitiveDataLogging = builder.Configuration.GetValue<bool>("Sensitive
 
 
 builder.Services.AddScoped(_ => new GymContext(builder.Configuration["ConnectionString"], true, enableSensitiveDataLogging));
+builder.Services.AddTransient<MembersRepository>();
 
 var app = builder.Build();
 
