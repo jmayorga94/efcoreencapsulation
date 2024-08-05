@@ -4,6 +4,7 @@ using EfCoreEncapsulation.Api.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EfCoreEncapsulation.Api.Migrations
 {
     [DbContext(typeof(GymContext))]
-    partial class GymContextModelSnapshot : ModelSnapshot
+    [Migration("20240805192143_Configured_Entities_To_Tables")]
+    partial class Configured_Entities_To_Tables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,26 +46,6 @@ namespace EfCoreEncapsulation.Api.Migrations
                         .HasName("ClassId");
 
                     b.ToTable("Classes", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            ClassName = "Yoga",
-                            Instructor = "Alice Johnson"
-                        },
-                        new
-                        {
-                            Id = 2,
-                            ClassName = "Pilates",
-                            Instructor = "Bob Brown"
-                        },
-                        new
-                        {
-                            Id = 3,
-                            ClassName = "Cycling",
-                            Instructor = "Leslie Cabrera"
-                        });
                 });
 
             modelBuilder.Entity("EfCoreEncapsulation.Api.Enrollments.Enrollment", b =>
@@ -74,34 +56,20 @@ namespace EfCoreEncapsulation.Api.Migrations
                     b.Property<int>("ClassId")
                         .HasColumnType("int");
 
+                    b.Property<int>("FK_Enrollments_Classes_ClassId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("FK_Enrollments_Members_MemberId")
+                        .HasColumnType("int");
+
                     b.HasKey("MemberId", "ClassId")
                         .HasName("PK_Enrollments");
 
-                    b.HasIndex("ClassId");
+                    b.HasIndex("FK_Enrollments_Classes_ClassId");
+
+                    b.HasIndex("FK_Enrollments_Members_MemberId");
 
                     b.ToTable("Enrollments");
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            ClassId = 1
-                        },
-                        new
-                        {
-                            MemberId = 2,
-                            ClassId = 2
-                        },
-                        new
-                        {
-                            MemberId = 1,
-                            ClassId = 3
-                        },
-                        new
-                        {
-                            MemberId = 3,
-                            ClassId = 3
-                        });
                 });
 
             modelBuilder.Entity("EfCoreEncapsulation.Api.Members.Member", b =>
@@ -125,39 +93,19 @@ namespace EfCoreEncapsulation.Api.Migrations
                         .HasName("PK_Members");
 
                     b.ToTable("Members", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            MemberId = 1,
-                            MembershipStartDate = new DateTime(2024, 8, 5, 15, 28, 10, 822, DateTimeKind.Local).AddTicks(3844),
-                            Name = "John Doe"
-                        },
-                        new
-                        {
-                            MemberId = 2,
-                            MembershipStartDate = new DateTime(2024, 8, 5, 15, 28, 10, 822, DateTimeKind.Local).AddTicks(3883),
-                            Name = "Jane Smith"
-                        },
-                        new
-                        {
-                            MemberId = 3,
-                            MembershipStartDate = new DateTime(2024, 8, 5, 15, 28, 10, 822, DateTimeKind.Local).AddTicks(3884),
-                            Name = "Paige Patchet"
-                        });
                 });
 
             modelBuilder.Entity("EfCoreEncapsulation.Api.Enrollments.Enrollment", b =>
                 {
                     b.HasOne("EfCoreEncapsulation.Api.Classes.Class", "Class")
                         .WithMany("Enrollments")
-                        .HasForeignKey("ClassId")
+                        .HasForeignKey("FK_Enrollments_Classes_ClassId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("EfCoreEncapsulation.Api.Members.Member", "Member")
                         .WithMany("Enrollments")
-                        .HasForeignKey("MemberId")
+                        .HasForeignKey("FK_Enrollments_Members_MemberId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

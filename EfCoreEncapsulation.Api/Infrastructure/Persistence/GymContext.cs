@@ -2,7 +2,6 @@
 using EfCoreEncapsulation.Api.Enrollments;
 using EfCoreEncapsulation.Api.Members;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace EfCoreEncapsulation.Api.Infrastructure.Persistence
 {
@@ -36,26 +35,27 @@ namespace EfCoreEncapsulation.Api.Infrastructure.Persistence
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Enrollment>()
-           .HasKey(e => new { e.MemberId, e.ClassId });
-
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(GymContext).Assembly);
 
             // Seed Data
             modelBuilder.Entity<Member>().HasData(
                 new Member { MemberId = 1, Name = "John Doe", MembershipStartDate = DateTime.Now },
-                new Member { MemberId = 2, Name = "Jane Smith", MembershipStartDate = DateTime.Now }
+                new Member { MemberId = 2, Name = "Jane Smith", MembershipStartDate = DateTime.Now },
+                new Member { MemberId = 3, Name = "Paige Patchet", MembershipStartDate = DateTime.Now }
             );
 
             modelBuilder.Entity<Class>().HasData(
-                new Class { ClassId = 1, ClassName = "Yoga", Instructor = "Alice Johnson" },
-                new Class { ClassId = 2, ClassName = "Pilates", Instructor = "Bob Brown" }
+                new Class { Id = 1, ClassName = "Yoga", Instructor = "Alice Johnson" },
+                new Class { Id = 2, ClassName = "Pilates", Instructor = "Bob Brown" },
+                new Class { Id = 3, ClassName = "Cycling", Instructor = "Leslie Cabrera" }
             );
 
             modelBuilder.Entity<Enrollment>().HasData(
-                new Enrollment { MemberId = 1, ClassId = 1 },
-                new Enrollment { MemberId = 2, ClassId = 2 }
-            );
+               new Enrollment { MemberId = 1, ClassId = 1 },
+               new Enrollment { MemberId = 2, ClassId = 2 },
+               new Enrollment { MemberId = 1, ClassId = 3 },
+               new Enrollment { MemberId = 3, ClassId = 3 }
+              );
 
         }
         ILoggerFactory? CreateLoggerFactory()

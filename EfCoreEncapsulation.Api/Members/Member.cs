@@ -1,4 +1,5 @@
-﻿using EfCoreEncapsulation.Api.Enrollments;
+﻿
+using EfCoreEncapsulation.Api.Enrollments;
 
 namespace EfCoreEncapsulation.Api.Members;
 

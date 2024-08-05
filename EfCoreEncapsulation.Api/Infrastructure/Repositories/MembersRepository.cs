@@ -12,7 +12,7 @@ namespace EfCoreEncapsulation.Api.Infrastructure.Repositories
             _context = context;
         }
 
-        public Member? GetMemberById(int id)
+        public Members.Member? GetMemberById(int id)
         {
            return _context.Members
               .Include(m => m.Enrollments)
