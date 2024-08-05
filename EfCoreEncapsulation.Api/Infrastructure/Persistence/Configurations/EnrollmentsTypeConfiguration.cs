@@ -17,6 +17,8 @@ namespace EfCoreEncapsulation.Api.Infrastructure.Persistence.Configurations
 
             builder.HasOne(e => e.Class)
                   .WithMany(c => c.Enrollments);
+
+            builder.Navigation(e => e.Class).AutoInclude();
         }
     }
 }
