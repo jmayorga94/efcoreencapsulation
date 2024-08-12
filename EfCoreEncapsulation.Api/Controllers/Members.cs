@@ -5,6 +5,7 @@ using EfCoreEncapsulation.Api.Members;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Net;
 
 namespace EfCoreEncapsulation.Api.Controllers
 {
@@ -13,9 +14,12 @@ namespace EfCoreEncapsulation.Api.Controllers
     public class Members : ControllerBase
     {
         private readonly MembersRepository _repository;
-        public Members(MembersRepository repository)
+        private readonly ClassesRepository _classesRepository;
+        public Members(MembersRepository repository,
+                       ClassesRepository classesRepository)
         {
             _repository = repository;
+            _classesRepository = classesRepository;
         }
 
         [HttpGet("id")]
@@ -52,6 +56,34 @@ namespace EfCoreEncapsulation.Api.Controllers
             };
 
             return Ok(response);
+        }
+
+        [HttpPost]
+        public IActionResult Enroll(int memberId,int classId)
+        {
+            /*
+             * Partially initialized antipattern
+             * This happens when you only retrieve a part of your entity and want to enforce invariants on it
+             * This is antipattern because it breaches encapsulation
+             */
+            var member = _repository.GetMemberById(memberId);
+
+            if(member is null)
+                return NotFound($"Member with id {memberId} could not be found");
+            var classToRegister = _classesRepository.GetClassById(classId);
+
+            if (classToRegister is null)
+            {
+                return NotFound($"Class with id {classId} could not be found");
+            }
+            
+            var result = member.Enroll(classToRegister);
+
+            if (result != "ok")
+                return Problem(statusCode: StatusCodes.Status500InternalServerError, title:"Error while creating member");
+
+            return Ok(result);
+
         }
     }
 }

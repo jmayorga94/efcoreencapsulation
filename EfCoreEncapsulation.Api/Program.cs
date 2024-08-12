@@ -22,6 +22,7 @@ var enableSensitiveDataLogging = builder.Configuration.GetValue<bool>("Sensitive
 
 builder.Services.AddScoped(_ => new GymContext(builder.Configuration["ConnectionString"], true, enableSensitiveDataLogging));
 builder.Services.AddTransient<MembersRepository>();
+builder.Services.AddTransient<ClassRepository>();
 
 var app = builder.Build();
 

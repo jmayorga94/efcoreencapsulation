@@ -17,6 +17,12 @@ public class MembersRepository
        return _context.Members
           .SingleOrDefault(m => m.MemberId == id);
     }
+    public bool SaveMember(Member member)
+    {
+        _context.Members.Add(member);
+
+        return _context.SaveChanges()>0;
+    }
 
     public Member? GetMemberByIdWithSplitQuery(int id)
     {

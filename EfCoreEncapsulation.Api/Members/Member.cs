@@ -1,4 +1,5 @@
 ﻿
+using EfCoreEncapsulation.Api.Classes;
 using EfCoreEncapsulation.Api.Enrollments;
 using EfCoreEncapsulation.Api.Payments;
 
@@ -13,4 +14,18 @@ public class Member
     public ICollection<Enrollment> Enrollments { get; set; }
     public ICollection<Payment> Payments { get; set; }
 
+    public string Enroll(Class classToRegister)
+    {
+        if (Enrollments.Any(e => e.Class == classToRegister))
+            return $"Already enrolled {classToRegister.ClassName}";
+
+        var enrollment = new Enrollment()
+        {
+            Class = classToRegister
+        };
+
+        Enrollments.Add(enrollment);
+
+        return "ok";
+    }
 }
